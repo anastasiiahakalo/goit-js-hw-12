@@ -63,6 +63,7 @@ form.addEventListener("submit", async (e) => {
 loadMoreBtn.addEventListener("click", async () => {
   page += 1;
 
+  hideLoadMoreButton();
   showLoader();
 
   try {
@@ -70,16 +71,21 @@ loadMoreBtn.addEventListener("click", async () => {
 
     createGallery(data.hits);
 
-    
     const card = document.querySelector(".gallery-item");
-    const rect = card.getBoundingClientRect();
 
-    window.scrollBy({
-      top: rect.height * 2,
-      behavior: "smooth",
-    });
+    if (card) {
+      const rect = card.getBoundingClientRect();
 
-    if (page * 15 >= totalHits) {
+      window.scrollBy({
+        top: rect.height * 2,
+        behavior: "smooth",
+      });
+    }
+
+    // якщо ще є сторінки
+    if (page * 15 < totalHits) {
+      showLoadMoreButton(); 
+    } else {
       hideLoadMoreButton();
       iziToast.info({
         message: "We're sorry, but you've reached the end of search results.",
